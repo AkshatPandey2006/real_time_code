@@ -1,0 +1,13 @@
+name: Keep Render Active
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # Runs every hour at the top of the hour
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest  # Uses a virtual machine running Ubuntu
+
+    steps:
+      - name: Send HTTP Request
+        run: curl -I https://real-time-code-9ui2.onrender.com/
