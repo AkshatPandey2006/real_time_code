@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./App.css";
 import io from "socket.io-client";
 import Editor from "@monaco-editor/react";
@@ -9,12 +9,17 @@ const App = () => {
   const [joined, setJoined] = useState(false);
   const [roomId, setRoomId] = useState("");
   const [userName, setUserName] = useState("");
-  const [agenda, setAgenda] = useState(""); // New State for Agenda
+  const [agenda, setAgenda] = useState("");
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState("// start code here");
   const [copySuccess, setCopySuccess] = useState("");
   const [users, setUsers] = useState([]);
   const [typing, setTyping] = useState("");
+  
+  // Sidebar resizing state
+  const [sidebarWidth, setSidebarWidth] = useState(250);
+  const [isResizing, setIsResizing] = useState(false);
+  const sidebarRef = useRef(null);
 
   useEffect(() => {
     socket.on("userJoined", (users) => {
@@ -52,9 +57,36 @@ const App = () => {
     };
   }, []);
 
+  // --- Resizing Logic ---
+  const startResizing = (e) => {
+    setIsResizing(true);
+  };
+
+  const stopResizing = () => {
+    setIsResizing(false);
+  };
+
+  const resize = (e) => {
+    if (isResizing) {
+      // Limit min/max width
+      if (e.clientX > 150 && e.clientX < 600) {
+        setSidebarWidth(e.clientX);
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", resize);
+    window.addEventListener("mouseup", stopResizing);
+    return () => {
+      window.removeEventListener("mousemove", resize);
+      window.removeEventListener("mouseup", stopResizing);
+    };
+  }, [isResizing]);
+  // ----------------------
+
   const joinRoom = () => {
     if (roomId && userName) {
-      // Pass agenda to server if backend supports it, otherwise it stays local for now
       socket.emit("join", { roomId, userName, agenda });
       setJoined(true);
     }
@@ -65,7 +97,7 @@ const App = () => {
     setJoined(false);
     setRoomId("");
     setUserName("");
-    setAgenda(""); // Reset Agenda
+    setAgenda("");
     setCode("// start code here");
     setLanguage("javascript");
   };
@@ -88,13 +120,11 @@ const App = () => {
     socket.emit("languageChange", { roomId, language: newLanguage });
   };
 
-  // Generate a random unique ID
   const generateRoomId = () => {
     const id = Math.random().toString(36).substring(2, 10);
     setRoomId(id);
   };
 
-  // Handle Enter key in join form
   const handleInputEnter = (e) => {
     if (e.code === "Enter") {
       joinRoom();
@@ -148,10 +178,13 @@ const App = () => {
 
   return (
     <div className="editor-container">
-      {/* Sidebar */}
-      <div className="sidebar">
+      {/* Sidebar with dynamic width */}
+      <div 
+        className="sidebar" 
+        style={{ width: sidebarWidth }}
+        ref={sidebarRef}
+      >
         <div className="sidebar-header">
-          {/* Display Agenda instead of "Code Room" */}
           <h2 title={agenda}>{agenda || "Code Room"}</h2>
           <div className="room-id-box">
             <span>ID: {roomId}</span>
@@ -179,6 +212,12 @@ const App = () => {
           </button>
         </div>
       </div>
+
+      {/* Resizer Handle */}
+      <div 
+        className="resizer"
+        onMouseDown={startResizing}
+      />
 
       {/* Main Area */}
       <div className="main-area">
@@ -214,6 +253,7 @@ const App = () => {
               fontSize: 14,
               automaticLayout: true,
               scrollBeyondLastLine: false,
+              padding: { top: 10 }
             }}
           />
         </div>
