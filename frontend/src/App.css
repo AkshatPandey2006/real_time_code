@@ -23,54 +23,99 @@ body {
   overflow: hidden;
 }
 
-/* Join Screen */
+/* Join Screen - Square Look */
 .join-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: radial-gradient(circle, #2d2d3a 0%, #1e1e1e 100%);
+  background: #1e1e1e; /* Flat background for cleaner look */
 }
 
 .join-form {
   background: var(--bg-sidebar);
-  padding: 2rem;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  padding: 2.5rem;
+  /* Removed border-radius for square look */
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   text-align: center;
-  width: 320px;
+  width: 360px;
 }
 
 .join-form h1 {
-  margin-bottom: 1.5rem;
-  font-weight: 500;
+  margin-bottom: 2rem;
+  font-weight: 400; /* Lighter font weight for elegance */
   color: #fff;
+  letter-spacing: 1px;
 }
 
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+/* Inputs - Square Look */
 .input-group input {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 1rem;
+  padding: 12px;
   background: var(--bg-dark);
   border: 1px solid var(--border-color);
   color: #fff;
-  border-radius: 4px;
+  /* Removed border-radius */
   outline: none;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
 }
 
 .input-group input:focus {
   border-color: var(--primary-color);
 }
 
+.room-id-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.room-id-wrapper input {
+  padding-right: 80px;
+}
+
+.btn-generate {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #3e3e42;
+  color: #fff;
+  border: 1px solid #555;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-generate:hover {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
 .btn-join {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.btn-join:hover {
+  background: #006bb3;
 }
 
 /* Editor Layout */
@@ -82,22 +127,47 @@ body {
 
 /* Sidebar */
 .sidebar {
-  width: 250px;
+  /* Removed static width, now handled by inline style in JSX */
   background: var(--bg-sidebar);
-  border-right: 1px solid var(--border-color);
+  /* Removed border-right, now handled by resizer */
   display: flex;
   flex-direction: column;
   padding: 1rem;
+  overflow: hidden; /* Prevent content spill during resize */
+  min-width: 150px; /* Safety min width */
+}
+
+/* Resizer Handle */
+.resizer {
+  width: 4px;
+  background-color: var(--bg-dark);
+  border-left: 1px solid var(--border-color);
+  cursor: col-resize;
+  transition: background-color 0.2s;
+  z-index: 10;
+}
+
+.resizer:hover, .resizer:active {
+  background-color: var(--primary-color);
 }
 
 .sidebar-header {
   margin-bottom: 2rem;
 }
 
+.sidebar-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .room-id-box {
   background: var(--bg-dark);
   padding: 8px;
-  border-radius: 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -115,6 +185,7 @@ body {
 
 .users-list {
   flex-grow: 1;
+  overflow-y: auto; /* Allow scrolling if many users */
 }
 
 .users-list h3 {
@@ -161,7 +232,6 @@ body {
   background: transparent;
   border: 1px solid var(--danger-red);
   color: var(--danger-red);
-  border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -177,6 +247,7 @@ body {
   display: flex;
   flex-direction: column;
   background: var(--bg-dark);
+  overflow: hidden; /* Ensure editor doesn't break layout */
 }
 
 .toolbar {
@@ -194,89 +265,23 @@ body {
   color: #fff;
   border: 1px solid var(--border-color);
   padding: 5px 10px;
-  border-radius: 4px;
   outline: none;
   cursor: pointer;
 }
 
 .right-tools {
-    display: flex;
-    align-items: center;
-}
-
-.typing-indicator {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    font-style: italic;
-}
-
-/* Code Editor Wrapper */
-.editor-wrapper {
-  flex-grow: 1;
-  min-height: 0; 
-  position: relative;
-}
-
-/* Update .input-group to handle the new layout */
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 15px; /* Spacing between inputs */
-  margin-bottom: 20px;
-}
-
-/* Wrapper to hold Input + Generate Button side-by-side */
-.room-id-wrapper {
-  position: relative;
   display: flex;
   align-items: center;
 }
 
-.room-id-wrapper input {
-  padding-right: 80px; /* Make space for the button inside the input */
-  margin-bottom: 0; /* Remove bottom margin to align with wrapper */
+.typing-indicator {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-style: italic;
 }
 
-/* Small "Generate" button positioned inside the input field */
-.btn-generate {
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #3e3e42;
-  color: #fff;
-  border: 1px solid #555;
-  padding: 5px 10px;
-  font-size: 0.75rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-generate:hover {
-  background: var(--primary-color);
-  border-color: var(--primary-color);
-}
-
-/* Ensure inputs take full width */
-.input-group input {
-  width: 100%;
-  padding: 12px;
-  background: var(--bg-dark);
-  border: 1px solid var(--border-color);
-  color: #fff;
-  border-radius: 4px;
-  outline: none;
-}
-
-/* Update Sidebar Header for Agenda */
-.sidebar-header h2 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 10px;
-  /* Add ellipsis if agenda is too long */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.editor-wrapper {
+  flex-grow: 1;
+  min-height: 0; 
+  position: relative;
 }
