@@ -166,15 +166,6 @@ const App = () => {
             fontSize: 14,
           }}
         />
-        <button className="run-btn" onClick={runCode}>
-          Execute
-        </button>
-        <textarea
-          className="output-console"
-          value={outPut}
-          readOnly
-          placeholder="Output will appear here ..."
-        />
       </div>
     </div>
   );
