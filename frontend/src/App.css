@@ -216,3 +216,67 @@ body {
   min-height: 0; 
   position: relative;
 }
+
+/* Update .input-group to handle the new layout */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Spacing between inputs */
+  margin-bottom: 20px;
+}
+
+/* Wrapper to hold Input + Generate Button side-by-side */
+.room-id-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.room-id-wrapper input {
+  padding-right: 80px; /* Make space for the button inside the input */
+  margin-bottom: 0; /* Remove bottom margin to align with wrapper */
+}
+
+/* Small "Generate" button positioned inside the input field */
+.btn-generate {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #3e3e42;
+  color: #fff;
+  border: 1px solid #555;
+  padding: 5px 10px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-generate:hover {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Ensure inputs take full width */
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  background: var(--bg-dark);
+  border: 1px solid var(--border-color);
+  color: #fff;
+  border-radius: 4px;
+  outline: none;
+}
+
+/* Update Sidebar Header for Agenda */
+.sidebar-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 10px;
+  /* Add ellipsis if agenda is too long */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
