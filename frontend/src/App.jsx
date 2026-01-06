@@ -9,6 +9,7 @@ const App = () => {
   const [joined, setJoined] = useState(false);
   const [roomId, setRoomId] = useState("");
   const [userName, setUserName] = useState("");
+  const [agenda, setAgenda] = useState(""); // New State for Agenda
   const [language, setLanguage] = useState("javascript");
   const [code, setCode] = useState("// start code here");
   const [copySuccess, setCopySuccess] = useState("");
@@ -53,7 +54,8 @@ const App = () => {
 
   const joinRoom = () => {
     if (roomId && userName) {
-      socket.emit("join", { roomId, userName });
+      // Pass agenda to server if backend supports it, otherwise it stays local for now
+      socket.emit("join", { roomId, userName, agenda });
       setJoined(true);
     }
   };
@@ -63,6 +65,7 @@ const App = () => {
     setJoined(false);
     setRoomId("");
     setUserName("");
+    setAgenda(""); // Reset Agenda
     setCode("// start code here");
     setLanguage("javascript");
   };
@@ -85,25 +88,56 @@ const App = () => {
     socket.emit("languageChange", { roomId, language: newLanguage });
   };
 
+  // Generate a random unique ID
+  const generateRoomId = () => {
+    const id = Math.random().toString(36).substring(2, 10);
+    setRoomId(id);
+  };
+
+  // Handle Enter key in join form
+  const handleInputEnter = (e) => {
+    if (e.code === "Enter") {
+      joinRoom();
+    }
+  };
+
   if (!joined) {
     return (
       <div className="join-container">
         <div className="join-form">
           <h1>Collab Code</h1>
+          
           <div className="input-group">
-            <input
-              type="text"
-              placeholder="Room ID"
-              value={roomId}
-              onChange={(e) => setRoomId(e.target.value)}
-            />
+            <div className="room-id-wrapper">
+              <input
+                type="text"
+                placeholder="Room ID"
+                value={roomId}
+                onChange={(e) => setRoomId(e.target.value)}
+                onKeyUp={handleInputEnter}
+              />
+              <button className="btn-generate" onClick={generateRoomId}>
+                Generate
+              </button>
+            </div>
+
             <input
               type="text"
               placeholder="Your Name"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
+              onKeyUp={handleInputEnter}
+            />
+
+            <input
+              type="text"
+              placeholder="Agenda (e.g., LeetCode 101)"
+              value={agenda}
+              onChange={(e) => setAgenda(e.target.value)}
+              onKeyUp={handleInputEnter}
             />
           </div>
+
           <button onClick={joinRoom} className="btn-join">
             Join Room
           </button>
@@ -117,7 +151,8 @@ const App = () => {
       {/* Sidebar */}
       <div className="sidebar">
         <div className="sidebar-header">
-          <h2>Code Room</h2>
+          {/* Display Agenda instead of "Code Room" */}
+          <h2 title={agenda}>{agenda || "Code Room"}</h2>
           <div className="room-id-box">
             <span>ID: {roomId}</span>
             <button onClick={copyRoomId} className="copy-btn">
