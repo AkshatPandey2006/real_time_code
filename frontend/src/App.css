@@ -6,7 +6,6 @@
   --primary-color: #007acc;
   --text-main: #cccccc;
   --text-dim: #858585;
-  --success-green: #4caf50;
   --danger-red: #e74c3c;
 }
 
@@ -138,6 +137,7 @@ body {
 }
 
 .avatar {
+  min-width: 24px;
   width: 24px;
   height: 24px;
   background: var(--primary-color);
@@ -147,6 +147,12 @@ body {
   align-items: center;
   font-size: 0.7rem;
   font-weight: bold;
+}
+
+.username {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .leave-btn {
@@ -196,7 +202,6 @@ body {
 .right-tools {
     display: flex;
     align-items: center;
-    gap: 15px;
 }
 
 .typing-indicator {
@@ -205,80 +210,9 @@ body {
     font-style: italic;
 }
 
-.run-btn {
-  background: var(--success-green);
-  color: white;
-  border: none;
-  padding: 6px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.terminal-toggle {
-    background: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-}
-
-.terminal-toggle.active {
-    background: var(--border-color);
-}
-
 /* Code Editor Wrapper */
 .editor-wrapper {
   flex-grow: 1;
-  /* Critical for Monaco to resize properly in flex container */
   min-height: 0; 
   position: relative;
-}
-
-/* Terminal Section */
-.terminal-container {
-  height: 250px;
-  background: var(--bg-sidebar);
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-}
-
-.terminal-header {
-  padding: 8px 1rem;
-  background: var(--bg-header);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-.clear-btn {
-  background: none;
-  border: none;
-  color: var(--text-dim);
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.clear-btn:hover {
-  color: #fff;
-}
-
-.terminal-body {
-  flex-grow: 1;
-  padding: 1rem;
-  overflow-y: auto;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.9rem;
-  color: #fff;
-}
-
-.placeholder {
-  color: var(--text-dim);
-  font-style: italic;
 }
