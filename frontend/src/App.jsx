@@ -155,7 +155,7 @@ const App = () => {
 
       <div className="editor-wrapper">
         <Editor
-          height={"60%"}
+          height={"100%"}
           defaultLanguage={language}
           language={language}
           value={code}
